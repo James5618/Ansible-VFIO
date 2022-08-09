@@ -1,0 +1,6 @@
+---
+
+libvirtd_pkg:
+  - ffff
+
+grub_config: "/etc/default/grub"

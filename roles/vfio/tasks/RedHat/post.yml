@@ -1,0 +1,10 @@
+---
+
+- name: Update dracut config
+  become: yes
+  lineinfile:
+    state: present
+    path: "/etc/dracut.conf.d/vfio.conf"
+    line: 'add_drivers+="vfio vfio_iommu_type1 vfio_pci"'
+    create: yes
+  notify: "update initrd {{ ansible_os_family }}"

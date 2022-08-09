@@ -1,0 +1,9 @@
+---
+
+libvirtd_pkg:
+  - ovmf
+  - libvirt-clients
+  - libvirt-daemon
+  - libvirt-daemon-system
+  - qemu-kvm
+libvirt_disable_apparmor: true

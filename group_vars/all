@@ -1,0 +1,2 @@
+grub_config: "/etc/default/grub"
+libvirt_disable_apparmor: false

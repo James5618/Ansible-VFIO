@@ -1,0 +1,21 @@
+
+---
+- include_vars: "{{ ansible_distribution }}.yml"
+  with_first_found:
+    - "{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+    - "default.yml"
+
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}/pre.yml"
+    - "{{ ansible_os_family }}/pre.yml"
+  skip: true
+
+- include_tasks: libvirtd.yml
+
+- include_tasks: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_distribution }}/post.yml"
+    - "{{ ansible_os_family }}/post.yml"
+  skip: true

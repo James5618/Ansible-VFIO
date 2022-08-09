@@ -1,0 +1,4 @@
+libvirtd_pkg:
+  - edk2-ovmf
+  - edk2.git-ovmf-x64
+  - "@virtualization"

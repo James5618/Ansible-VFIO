@@ -1,0 +1,2 @@
+---
+grub2_mkconfig_output: "/boot/efi/EFI/fedora/grub.cfg"

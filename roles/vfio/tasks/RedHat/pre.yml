@@ -1,0 +1,7 @@
+---
+
+- name: Install libselinux-python
+  become: yes
+  package:
+    state: present
+    name: libselinux-python

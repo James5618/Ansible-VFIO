@@ -1,0 +1,10 @@
+---
+grub_config: "/etc/default/grub"
+
+vfio_iommu: null
+vfio_pci_ids: []
+vfio_transparent_hugepage: false
+vfio_hugepages: []
+vfio_hugetlbfs_group: hugetlbfs
+vfio_hugetlbfs_users: []
+vfio_hugetlbfs_mount: /dev/hugepages

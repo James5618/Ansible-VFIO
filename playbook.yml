@@ -1,0 +1,21 @@
+---
+- hosts:
+    - localhost
+  vars:
+    vfio_iommu: amd  # amd|intel
+    vfio_pci_ids:
+      #add PCI ID's here
+
+    vfio_transparent_hugepage: false  # transparent_hugepage=never
+    vfio_hugepages:  # First option is default
+      - size: 1G
+        count: 50
+
+    vfio_hugetlbfs_group: hugetlbfs
+    vfio_hugetlbfs_users:
+      - xlevus
+    vfio_hugetlbfs_mount: /hugepages
+
+  roles:
+    - vfio
+    - libvirtd

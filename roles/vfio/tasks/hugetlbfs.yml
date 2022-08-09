@@ -1,0 +1,31 @@
+---
+
+- name: Hugetlbfs Group
+  become: yes
+  group:
+    name: "{{ vfio_hugetlbfs_group }}"
+    state: present
+    system: yes
+
+- name: Hugetlbfs Users
+  become: yes
+  user:
+    name: "{{ item }}"
+    append: yes
+    groups: "{{ vfio_hugetlbfs_group }}"
+  with_items: "{{ vfio_hugetlbfs_users }}"
+
+- name: Hugetlbfs Mountpoint
+  become: yes
+  file:
+    path: "{{ vfio_hugetlbfs_mount }}"
+    state: directory
+
+- name: Hugetlbfs Mount
+  become: yes
+  mount:
+    state: mounted
+    path: "{{ vfio_hugetlbfs_mount }}"
+    src: hugetlbfs
+    fstype: hugetlbfs
+    opts: "mode=1770,gid={{ vfio_hugetlbfs_group }}"

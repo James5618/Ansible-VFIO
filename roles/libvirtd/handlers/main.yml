@@ -1,0 +1,4 @@
+---
+- name: mark apparmor
+  become: yes
+  command: apt-mark hold apparmor

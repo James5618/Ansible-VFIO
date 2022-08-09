@@ -1,0 +1,20 @@
+---
+- name: update initrd Debian
+  become: yes
+  when: ansible_os_family in ['Debian']
+  command: update-initramfs -u 
+
+- name: update initrd RedHat
+  become: yes
+  when: ansible_os_family in ['RedHat']
+  command: dracut -f -v
+
+- name: update grub Debian
+  become: yes
+  when: ansible_os_family in ['Debian']
+  command: update-grub2
+
+- name: update grub RedHat
+  become: yes
+  when: ansible_os_family in ['RedHat']
+  command: "grub2-mkconfig -o {{ grub2_mkconfig_output }}"

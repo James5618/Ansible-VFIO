@@ -1,0 +1,17 @@
+---
+- name: Install Packages
+  become: yes
+  package:
+    state: present
+    name: "{{ item }}"
+  with_items: "{{ libvirtd_pkg }}"
+
+- name: Enable Services
+  become: yes
+  service:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+  with_items:
+    - libvirtd
+    - libvirt-guests

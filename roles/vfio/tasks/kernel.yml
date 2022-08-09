@@ -1,0 +1,65 @@
+---
+
+- name: IOMMU kernel option
+  become: yes
+  lineinfile:
+    state: present
+    path: "{{ grub_config }}"
+    regexp: '^VFIO_IOMMU='
+    line: 'VFIO_IOMMU="iommu=1 {{ vfio_iommu }}_iommu=on"'
+    insertbefore: "^GRUB_CMDLINE_LINUX="
+  notify: "update grub {{ ansible_os_family }}"
+  when: vfio_iommu in ['intel', 'amd']
+
+- name: Hugepages kernel option
+  become: yes
+  lineinfile:
+    state: present
+    path: "{{ grub_config }}"
+    regexp: '^VFIO_HUGEPAGES='
+    line: >-
+      VFIO_HUGEPAGES="{% if not vfio_transparent_hugepage %}transparent_hugepage=never {% endif -%}
+        {% for pg in vfio_hugepages -%}
+        {%- if loop.first %}default_hugepagesz={{ pg.size }} {% endif -%}
+        hugepagesz={{ pg.size }} hugepages={{ pg.count }}{% endfor %}"
+    insertbefore: "^GRUB_CMDLINE_LINUX="
+  notify: "update grub {{ ansible_os_family }}"
+
+- name: PCI-IDs kernel option
+  become: yes
+  lineinfile:
+    state: present
+    path: "{{ grub_config }}"
+    regexp: '^VFIO_PCIIDS='
+    line: 'VFIO_PCIIDS="rd.driver.pre=vfio-pci {% if vfio_pci_ids %}vfio-pci.ids={{ vfio_pci_ids|join(",") }}"{% endif %}'
+    insertbefore: "^GRUB_CMDLINE_LINUX="
+  notify: "update grub {{ ansible_os_family }}"
+
+- name: VFIO kernel options
+  become: yes
+  lineinfile:
+    state: present
+    path: "{{ grub_config }}"
+    regexp: '^VFIOFLAGS='
+    line: 'VFIOFLAGS="$VFIO_IOMMU $VFIO_HUGEPAGES $VFIO_PCIIDS"'
+    insertbefore: "^GRUB_CMDLINE_LINUX="
+  notify: "update grub {{ ansible_os_family }}"
+
+- name: Kernel Options
+  become: yes
+  lineinfile:
+    state: present
+    backrefs: yes
+    path: "{{ grub_config }}"
+    regexp: '^(GRUB_CMDLINE_LINUX=(?!.*\$VFIOFLAGS)"[^"]+)(".*)'
+    line: '\1 $VFIOFLAGS\2'
+  notify: "update grub {{ ansible_os_family }}"
+
+- name: VFIO modules.conf
+  become: yes
+  copy:
+    dest: /etc/modprobe.d/vfio.conf
+    content: options vfio-pci ids={{ vfio_pci_ids|join(",") }}
+  when: vfio_pci_ids
+  notify:
+    - "update initrd {{ ansible_os_family }}"
