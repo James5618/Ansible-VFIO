@@ -13,7 +13,7 @@
 
     vfio_hugetlbfs_group: hugetlbfs
     vfio_hugetlbfs_users:
-      - xlevus
+      - james
     vfio_hugetlbfs_mount: /hugepages
 
   roles:
